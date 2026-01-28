@@ -54,3 +54,4 @@ This plugin is powered by the excellent [pgn-viewer](https://github.com/mliebelt
 ## License
 MIT
 # obsidian-chess-viewer
+# obsidian-chess-viewer
