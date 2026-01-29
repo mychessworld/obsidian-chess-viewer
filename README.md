@@ -14,18 +14,18 @@ This plugin allows you to view chess games (PGN) and positions (FEN) directly in
 ### 1. Rendering PGN
 To display a chess game, use the `pgn` code block:
 
-```pgn
-1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7
-```
+![alt text](photo_1.png)
+
+
+![alt text](plugin_1.png)
 
 ### 2. Rendering FEN
 To display a specific board position, use the `fen` code block:
 
-```fen
-rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2
-```
+![alt text](photo_2.png)
 
-![alt text](2026-01-28_23-18-05.png)
+
+![alt text](plugin_2.png)
 
 ## Settings
 
