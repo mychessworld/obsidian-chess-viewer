@@ -40,19 +40,10 @@ Go to `Settings` -> `Chess PGN/FEN Viewer` to adjust the **Board Size**. The siz
 
 ---
 
-## Development
-
-If you want to build the plugin yourself:
-
-1. Clone the repository.
-2. Install dependencies: `npm install`.
-3. Build the plugin: `npm run build`.
-
 ## Credits
 
 This plugin is powered by the excellent [pgn-viewer](https://github.com/mliebelt/pgn-viewer) library by Markus Liebelt.
 
 ## License
 MIT
-# obsidian-chess-viewer
-# obsidian-chess-viewer
+
