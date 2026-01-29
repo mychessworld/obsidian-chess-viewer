@@ -34,10 +34,9 @@ Go to `Settings` -> `Chess PGN/FEN Viewer` to adjust the **Board Size**. The siz
 ## Installation
 
 ### From GitHub (Manual)
-1. Download the latest release (`main.js`, `manifest.json`, `styles.css`).
-2. Create a folder named `obsidian-chess-plugin` in your vault's `.obsidian/plugins/` directory.
-3. Move the downloaded files into that folder.
-4. Reload Obsidian and enable the plugin in `Settings` -> `Community plugins`.
+1. Download the folder 'obsidian-chess-plugin' with latest release (`main.js`, `manifest.json`, `styles.css`).
+2. Move the downloaded folder in your vault's `.obsidian/plugins/` directory.
+3. Reload Obsidian and enable the plugin in `Settings` -> `Community plugins`.
 
 ---
 
