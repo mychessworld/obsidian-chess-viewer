@@ -1,4 +1,4 @@
-# Obsidian Chess PGN/FEN Viewer
+## Obsidian Chess PGN/FEN Viewer
 
 This plugin allows you to view chess games (PGN) and positions (FEN) directly in your Obsidian notes using the `@mliebelt/pgn-viewer` library.
 
