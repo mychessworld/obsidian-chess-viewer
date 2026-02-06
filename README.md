@@ -19,6 +19,12 @@ To display a chess game, use the `pgn` code block:
 
 ![alt text](plugin_1.png)
 
+
+![alt text](photo_3.png)
+
+
+![alt text](plugin_3.png)
+
 ### 2. Rendering FEN
 To display a specific board position, use the `fen` code block:
 
@@ -46,4 +52,5 @@ This plugin is powered by the excellent [pgn-viewer](https://github.com/mliebelt
 
 ## License
 MIT
+
 
