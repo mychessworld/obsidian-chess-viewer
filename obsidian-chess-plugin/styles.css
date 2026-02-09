@@ -18,7 +18,6 @@
   margin-bottom: 2px !important;
   /* Было 5px, теперь 2px как в пазлах */
   width: 100% !important;
-  max-width: calc(var(--chess-plugin-size, 500) * 1px) !important;
   padding: 0 !important;
   box-sizing: border-box !important;
 }
@@ -67,9 +66,9 @@
 }
 
 .obsidian-chess-plugin-container .moves.inline {
+  display: block !important;
   width: 100% !important;
-  height: auto !important;
-  max-height: 250px !important;
+  max-height: 150px !important;
   overflow-y: auto !important;
   border: 1px solid var(--background-modifier-border) !important;
   border-radius: 4px !important;
@@ -77,6 +76,30 @@
   padding: 8px !important;
   box-sizing: border-box !important;
 }
+
+/* Возвращаем "руку" для всей области ходов */
+.obsidian-chess-plugin-container .moves.inline * {
+  cursor: pointer !important;
+}
+
+/* Стилизация полосы прокрутки для области ходов */
+.obsidian-chess-plugin-container .moves.inline::-webkit-scrollbar {
+  width: 10px !important;
+  display: block !important;
+}
+
+.obsidian-chess-plugin-container .moves.inline::-webkit-scrollbar-thumb {
+  background-color: var(--text-muted) !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+}
+
+.obsidian-chess-plugin-container .moves.inline::-webkit-scrollbar-track {
+  background-color: var(--background-secondary) !important;
+  cursor: pointer !important;
+}
+
+
 
 /* Высота всего контейнера */
 .cm-preview-code-block.cm-embed-block.markdown-rendered.cm-lang-pgn .obsidian-chess-plugin-container {
@@ -108,16 +131,18 @@
   align-items: center !important;
 }
 
-/* Главный контейнер */
-.pgn-viewer-container.obsidian-chess-plugin-container,
+/* Главный контейнер: увеличиваем область, чтобы координаты не обрезались */
 .obsidian-chess-plugin-container {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   justify-content: flex-start !important;
   margin: 0 auto !important;
-  width: 100% !important;
+  width: calc(var(--chess-plugin-size, 500) * 1px) !important;
   height: auto !important;
+  padding: 24px !important;
+  /* Равномерное место для координат со всех сторон */
+  box-sizing: content-box !important;
 }
 
 /* Убираем сетку, которая может навязываться библиотекой */
@@ -127,4 +152,59 @@
   flex-direction: column !important;
   grid-template-columns: none !important;
   grid-template-rows: none !important;
+}
+
+/* --- Координаты снаружи доски --- */
+
+/* Разрешаем отображение элементов за пределами доски */
+.obsidian-chess-plugin-container .cg-wrap {
+  overflow: visible !important;
+}
+
+/* Цифры (ranks) — выносим вправо */
+.obsidian-chess-plugin-container coords.ranks {
+  right: -18px !important;
+  top: 0 !important;
+  height: 100% !important;
+  width: 20px !important;
+  display: flex !important;
+  flex-direction: column-reverse !important;
+  justify-content: space-around !important;
+  align-items: center !important;
+}
+
+/* Буквы (files) — выносим вниз */
+.obsidian-chess-plugin-container coords.files {
+  bottom: -20px !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 20px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-around !important;
+  align-items: center !important;
+
+}
+
+/* Сохранение логики переворота доски (orientation-black) */
+.obsidian-chess-plugin-container .cg-wrap.orientation-black coords.ranks {
+  flex-direction: column !important;
+}
+
+.obsidian-chess-plugin-container .cg-wrap.orientation-black coords.files {
+  flex-direction: row-reverse !important;
+  margin-bottom: 0px !important;
+}
+
+/* Стилизация самих символов для лучшей видимости на фоне */
+.obsidian-chess-plugin-container coords coord {
+  position: static !important;
+  color: var(--text-normal) !important;
+  font-weight: 800 !important;
+  text-shadow: none !important;
+  font-size: 10px !important;
+}
+
+.obsidian-chess-plugin-container .default.buttons {
+  margin-top: 23px !important;
 }

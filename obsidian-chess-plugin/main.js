@@ -7239,6 +7239,10 @@ var DEFAULT_SETTINGS = {
   chessSize: 500
 };
 var ChessPlugin = class extends import_obsidian.Plugin {
+  constructor() {
+    super(...arguments);
+    this.isFixingOrder = false;
+  }
   async onload() {
     console.log("Loading Chess Plugin");
     await this.loadSettings();
@@ -7259,6 +7263,57 @@ var ChessPlugin = class extends import_obsidian.Plugin {
   }
   updateStyle() {
     document.documentElement.style.setProperty("--chess-plugin-size", this.settings.chessSize.toString());
+  }
+  fixVariationOrderInDOM(container) {
+    var _a;
+    if (this.isFixingOrder)
+      return;
+    try {
+      const movesContainer = container.querySelector(".moves");
+      if (!movesContainer)
+        return;
+      this.isFixingOrder = true;
+      const children = Array.from(movesContainer.children);
+      for (let i = 0; i < children.length; i++) {
+        const current = children[i];
+        if (current.tagName === "DIV" && (current.classList.contains("variation") || current.className.includes("variation"))) {
+          const varText = current.textContent || "";
+          const varMatch = varText.match(/(\d+)(\.\.\.|\.)/);
+          if (!varMatch)
+            continue;
+          const varNum = varMatch[1];
+          const isVarForBlack = varMatch[2] === "...";
+          for (let j = 0; j < children.length; j++) {
+            const targetNode = children[j];
+            if (targetNode.tagName === "MOVE-NUMBER") {
+              const nodeText = ((_a = targetNode.textContent) == null ? void 0 : _a.trim()) || "";
+              const isNodeForBlack = nodeText.endsWith("...");
+              const nodeNum = nodeText.replace(/\.+$/, "");
+              if (nodeNum === varNum && isVarForBlack === isNodeForBlack) {
+                let insertAfter = targetNode;
+                for (let k = j + 1; k < Math.min(j + 8, children.length); k++) {
+                  const sibling = children[k];
+                  if (sibling.tagName === "MOVE" || sibling.tagName === "SPAN" || sibling.classList.contains("filler")) {
+                    insertAfter = sibling;
+                  } else {
+                    break;
+                  }
+                }
+                if (insertAfter !== current && insertAfter.nextSibling !== current) {
+                  console.log(`CHESS DEBUG: Success reordering ${varNum}${isVarForBlack ? "..." : "."} with comment.`);
+                  insertAfter.after(current);
+                }
+                break;
+              }
+            }
+          }
+        }
+      }
+      this.isFixingOrder = false;
+    } catch (error) {
+      this.isFixingOrder = false;
+      console.error("CHESS DEBUG: Error fixing variation order:", error);
+    }
   }
   renderBoard(source, el, mode) {
     const id = "board-" + Math.random().toString(36).substring(2, 15);
@@ -7282,13 +7337,29 @@ var ChessPlugin = class extends import_obsidian.Plugin {
           if (pgnData.toLowerCase().startsWith("fen:")) {
             const lines = pgnData.split(/\r?\n/);
             const fenLine = lines[0];
-            const fen = fenLine.substring(4).trim();
+            const fenMatch = fenLine.match(/^fen:\s*(.+?)(?:\s+(\d+\.\.\.)|\s*$)/i);
+            let fen = "";
+            let remainingFromFirstLine = "";
+            if (fenMatch) {
+              const afterFen = fenLine.substring(4).trim();
+              const parts = afterFen.split(/\s+/);
+              if (parts.length >= 6) {
+                fen = parts.slice(0, 6).join(" ");
+                remainingFromFirstLine = parts.slice(6).join(" ");
+              } else {
+                fen = afterFen;
+              }
+            }
             if (fen) {
               const parts = fen.split(" ");
-              if (parts.length >= 2 && parts[1] === "b") {
+              const isBlackToMove = parts.length >= 2 && parts[1] === "b";
+              if (isBlackToMove) {
                 config.orientation = "black";
               }
-              const remainingPgn = lines.slice(1).join("\n").trim();
+              let remainingPgn = lines.slice(1).join("\n").trim();
+              if (remainingFromFirstLine) {
+                remainingPgn = remainingFromFirstLine + (remainingPgn ? " " + remainingPgn : "");
+              }
               const separator = remainingPgn.startsWith("[") ? "\n" : "\n\n";
               pgnData = `[FEN "${fen}"]
 [SetUp "1"]${separator}${remainingPgn}`;
@@ -7297,6 +7368,13 @@ var ChessPlugin = class extends import_obsidian.Plugin {
           config.pgn = pgnData;
           if (pgnvLib.pgnView) {
             pgnvLib.pgnView(id, config);
+            const observer = new MutationObserver(() => {
+              this.fixVariationOrderInDOM(container);
+            });
+            observer.observe(container, { childList: true, subtree: true });
+            [200, 500, 1e3].forEach((delay) => {
+              setTimeout(() => this.fixVariationOrderInDOM(container), delay);
+            });
           } else {
             container.setText("pgnView function not found.");
           }
