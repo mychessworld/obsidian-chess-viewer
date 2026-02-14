@@ -7485,7 +7485,12 @@ var ChessPlugin = class extends import_obsidian.Plugin {
             container.setText("pgnView function not found.");
           }
         } else if (mode === "fen") {
-          config.position = source.trim();
+          const fen = source.trim();
+          config.position = fen;
+          const fenParts = fen.split(/\s+/);
+          if (fenParts.length >= 2 && fenParts[1].toLowerCase() === "b") {
+            config.orientation = "black";
+          }
           if (pgnvLib.pgnBoard) {
             const boardInstance = pgnvLib.pgnBoard(id, config);
             setTimeout(() => {
