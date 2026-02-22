@@ -208,3 +208,15 @@
 .obsidian-chess-plugin-container .default.buttons {
   margin-top: 23px !important;
 }
+
+/* Цвет текста внутренней ссылки */
+.cm-hmd-internal-link .cm-underline {
+	color: #0000FF !important; /* Замените на ваш цвет */
+  font-weight: 700;
+}
+
+/* Цвет текста внутренней ссылки в режиме чтения */
+.internal-link {
+	color: #0000FF !important; /* Замените на ваш цвет */
+  font-weight: 700;
+}

@@ -7427,6 +7427,9 @@ var ChessPlugin = class extends import_obsidian.Plugin {
     container.id = id;
     setTimeout(() => {
       try {
+        if (!container.isConnected) {
+          return;
+        }
         let pgnvLib = PGNV;
         if ((!pgnvLib || Object.keys(pgnvLib).length === 0) && window.PGNV) {
           pgnvLib = window.PGNV;
@@ -7502,7 +7505,9 @@ var ChessPlugin = class extends import_obsidian.Plugin {
         }
       } catch (error) {
         console.error("Chess Plugin Error:", error);
-        container.setText(`Error rendering chess board: ${error}`);
+        if (container.isConnected) {
+          container.setText(`Error rendering chess board: ${error}`);
+        }
       }
     }, 100);
   }
