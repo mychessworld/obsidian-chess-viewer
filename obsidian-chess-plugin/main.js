@@ -7425,9 +7425,12 @@ var ChessPlugin = class extends import_obsidian.Plugin {
     const id = "board-" + Math.random().toString(36).substring(2, 15);
     const container = el.createDiv({ cls: "pgn-viewer-container obsidian-chess-plugin-container" });
     container.id = id;
-    setTimeout(() => {
+    const attemptRender = (attempts) => {
       try {
-        if (!container.isConnected) {
+        if (!container.isConnected || !document.getElementById(id)) {
+          if (attempts > 0) {
+            setTimeout(() => attemptRender(attempts - 1), 200);
+          }
           return;
         }
         let pgnvLib = PGNV;
@@ -7509,7 +7512,8 @@ var ChessPlugin = class extends import_obsidian.Plugin {
           container.setText(`Error rendering chess board: ${error}`);
         }
       }
-    }, 100);
+    };
+    setTimeout(() => attemptRender(10), 100);
   }
   addFlipButtonForFEN(container, boardId, boardInstance) {
     try {
